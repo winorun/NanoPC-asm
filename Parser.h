@@ -13,8 +13,10 @@
 #include <list>
 
 extern int line;
-extern std::list<unsigned char> g_programm;
+extern std::vector<unsigned char> g_programm;
 extern std::map<std::string,unsigned char> map_value;
+extern std::map<std::string,unsigned char> map_label;
+extern std::map<std::string,std::list<unsigned char>> map_label_list;
 extern std::map<std::string,unsigned char> map_command;
 extern std::map<std::string,unsigned char> map_reg;
 

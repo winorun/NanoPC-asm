@@ -17,6 +17,7 @@ jmp                                 return Parser::COMMAND_2;
 mov|add|sub|cmp|je|jne|joe          return Parser::COMMAND_3;
 and|xor|or|rol|ror|jsr|pull|push    return Parser::COMMAND_3;
 [[:alpha:]_][[:alpha:][:digit:]_]*  return Parser::IDENTIFIER;
+\$[[:alpha:]_][[:alpha:][:digit:]_]* return Parser::VALUE;
 \".+\"                              return Parser::WORD;
 \;.*                                 //
 \n                                  return Parser::NEW_LINE;

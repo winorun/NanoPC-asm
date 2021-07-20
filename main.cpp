@@ -1,9 +1,12 @@
 #include "Parser.h"
 #include <stdio.h>
+#include <fstream>
 
 int line=1;
-std::list<unsigned char> g_programm;
+std::vector<unsigned char> g_programm;
 std::map<std::string,unsigned char> map_value; 
+std::map<std::string,unsigned char> map_label;
+std::map<std::string,std::list<unsigned char>> map_label_list;
 std::map<std::string,unsigned char> map_command{ 
   { "nup", 0x00 }, 
   { "end", 0x01 }, 
@@ -44,6 +47,9 @@ int main(int argc, char **argv)
 
   Parser parser;
   parser.parse();
+  for(auto &i:map_label_list)
+      for(auto j:i.second)
+          g_programm[j]=map_label[i.first];
   {
       int i=0;
       for (unsigned char byte:g_programm) {
@@ -53,7 +59,13 @@ int main(int argc, char **argv)
         i++;
       }
   }
-  std::cout << std::endl << "lines:" << line << std::endl;
-  std::cout << "size:" << g_programm.size() << std::endl;
+  printf("\n");
+ 
+  printf("lines: %i\n",line);
+  printf("size: %i\n",g_programm.size());
+  g_programm.resize(256,0);
+  std::ofstream file("out.bin",std::ios_base::binary);
+  file.write((char *)g_programm.data(), g_programm.size());
+  file.close();
 }
 

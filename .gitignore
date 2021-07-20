@@ -1,4 +1,6 @@
 main
 src
 test.file
-
+*.swp
+out.bin
+nanopc-asm
