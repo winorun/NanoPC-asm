@@ -1,0 +1,21 @@
+%%
+[ \t]                               //
+0x[0-9AaBbCcDdEeFf]{1,2}            return Parser::NUMBER_HEX;
+[0-9]{1,3}                          return Parser::NUMBER_DEC;
+0b[01]{1,8}                         return Parser::NUMBER_BIN;
+R[0-9AaBbCcDdEeFf]                  return Parser::REG;
+([a-zA-Z][a-zA-Z0-9_]*):            return Parser::LABEL;
+@                                   return Parser::REG_LINK;
+\*                                  return Parser::REG_LINK_LINK;
+\'.'                                return Parser::NUMBER_CHAR;
+def                                 return Parser::DEF;
+DB|db                               return Parser::DB;                  
+,                                   return Parser::COMMA;
+nup|end                             return Parser::COMMAND_1;
+jmp                                 return Parser::COMMAND_2;
+mov|add|sub|cmp|je|jne|joe          return Parser::COMMAND_3;
+and|xor|or|rol|ror|jsr|pull|push    return Parser::COMMAND_3;
+[[:alpha:]_][[:alpha:][:digit:]_]*  return Parser::IDENTIFIER;
+\".+\"                              return Parser::WORD;
+\;.*                                 //
+\n                                  return Parser::NEW_LINE;

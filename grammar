@@ -1,0 +1,185 @@
+%scanner                Scanner.h
+%polymorphic INT: int; STRING: std::string; UCHAR: unsigned char
+%token DEF COMMA DB WORD REG REG_LINK REG_LINK_LINK NEW_LINE 
+%token <UCHAR> NUMBER_HEX NUMBER_DEC NUMBER_BIN NUMBER_CHAR
+%token <STRING> IDENTIFIER COMMAND_1 COMMAND_2 COMMAND_3 LABEL
+%type  <STRING> identifier word label
+%type  <UCHAR> number command_1 command_2 command_3 reg
+%type  <INT> opt;
+%%
+
+startrule:
+  startrule commandString
+|
+  commandString
+;
+
+reg:
+    REG
+    {
+      $$(map_reg[d_scanner.matched()]);
+    }
+;
+commandString:
+       DEF identifier number
+       {
+        std::cout << $2 << " = " << (int)$3 << "\n";
+        map_value[$2] = $3;
+       }
+|
+        NEW_LINE
+        {
+            line ++;
+        }
+|
+        label NEW_LINE command
+        {
+            line ++;
+            std::cout << "label: " << $1 << " = " << g_programm.size() << std::endl;
+        }
+|
+        label command
+        {
+            std::cout << "label: " << $1 << " = " << g_programm.size() << std::endl;
+        }
+|
+        command
+;
+command:
+       command_1
+       {
+        std::cout << std::hex << g_programm.size() << " command: " << std::hex << (int)$1 << "\n";
+        g_programm.push_back($1);
+       }
+|
+       command_2 opt
+       {
+        unsigned char date,type,cmd;
+        date = $2 % 0x100;
+        type = $2 / 0x100;
+        cmd = $1+type;
+        std::cout << std::hex << g_programm.size() << " command: " << std::hex << (int)cmd << "  " << (int)date << "\n";
+        g_programm.push_back(cmd);
+        g_programm.push_back(date);
+       }
+|
+        command_3 opt COMMA opt
+       {
+        unsigned char cmd,opt_1_data,opt_1_type,opt_2_data,opt_2_type;
+        opt_1_data = $2 % 0x100;
+        opt_1_type = $2 / 0x100;
+        opt_2_data = $4 % 0x100;
+        opt_2_type = $4 / 0x100;
+        opt_2_type = opt_2_type * 0b100;
+        cmd = $1+opt_2_type+opt_1_type;
+        std::cout << std::hex << g_programm.size() << " command: " << (int)cmd << "  " << (int)opt_1_data << " , " << (int)opt_2_data << "\n";
+        g_programm.push_back(cmd);
+        g_programm.push_back(opt_1_data);
+        g_programm.push_back(opt_2_data);
+       }
+|
+        db
+;
+
+
+
+opt:
+    reg
+    {
+        $$($1+0x100);
+    }
+|
+    number
+    {
+        $$($1);
+    }
+|
+    REG_LINK reg
+    {
+        $$($2+0x200);
+    }
+|
+    REG_LINK_LINK reg
+    {
+        $$($2+0x300);
+    }
+    
+;
+
+word:
+    WORD
+    {
+        $$(d_scanner.matched().substr(1, d_scanner.matched().length() - 2));
+    }
+;
+
+label:
+    LABEL
+    {
+        $$(d_scanner.matched().substr(0, d_scanner.matched().length() - 1));
+    }
+;
+db:
+  DB word
+  {
+    for(auto ch:$2){
+        g_programm.push_back(ch);
+    }
+  }
+|
+  DB number
+  {
+        g_programm.push_back($2);
+  }
+|
+  db COMMA number
+    {
+        g_programm.push_back($3);
+    }
+;
+number:
+      NUMBER_HEX
+  {
+    $$(std::stoi(d_scanner.matched(),0,16));
+  }
+|
+     NUMBER_DEC
+  {
+    $$(std::stoi(d_scanner.matched()));
+  }
+|
+     NUMBER_BIN
+  {
+    $$(std::stoi(std::string(d_scanner.matched()).erase(0, 2),0,2));
+  }
+|
+     NUMBER_CHAR
+  {
+    $$((unsigned char)d_scanner.matched().c_str()[1]);
+  }
+;
+identifier:
+  IDENTIFIER
+  {
+    $$(d_scanner.matched());
+  }
+;
+command_1:
+  COMMAND_1
+  {
+    $$(map_command[d_scanner.matched()]);
+  }
+;
+command_2:
+  COMMAND_2
+  {
+    $$(map_command[d_scanner.matched()]);
+  }
+;
+command_3:
+  COMMAND_3
+  {
+    $$(map_command[d_scanner.matched()]);
+  }
+;
+
