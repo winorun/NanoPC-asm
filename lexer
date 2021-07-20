@@ -5,6 +5,7 @@
 0b[01]{1,8}                         return Parser::NUMBER_BIN;
 R[0-9AaBbCcDdEeFf]                  return Parser::REG;
 ([a-zA-Z][a-zA-Z0-9_]*):            return Parser::LABEL;
+\.start                             return Parser::START;
 @                                   return Parser::REG_LINK;
 \*                                  return Parser::REG_LINK_LINK;
 \'.'                                return Parser::NUMBER_CHAR;

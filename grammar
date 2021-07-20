@@ -1,6 +1,6 @@
 %scanner                Scanner.h
 %polymorphic INT: int; STRING: std::string; UCHAR: unsigned char
-%token DEF COMMA DB WORD REG REG_LINK REG_LINK_LINK NEW_LINE 
+%token DEF COMMA DB WORD REG REG_LINK REG_LINK_LINK NEW_LINE START
 %token <UCHAR> NUMBER_HEX NUMBER_DEC NUMBER_BIN NUMBER_CHAR
 %token <STRING> IDENTIFIER COMMAND_1 COMMAND_2 COMMAND_3 LABEL
 %type  <STRING> identifier word label
@@ -44,6 +44,11 @@ commandString:
         }
 |
         command
+|
+        START number
+        {
+             g_programm.resize($2,0); 
+        }
 ;
 command:
        command_1
