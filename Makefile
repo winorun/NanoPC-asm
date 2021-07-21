@@ -1,4 +1,4 @@
-all:lex.cc parse.cc main.cpp
+all:lex.cc parse.cc main.cpp Parser.cpp
 	g++ $^ -o nanopc-asm
 
 lex.cc: lexer Scanner.h

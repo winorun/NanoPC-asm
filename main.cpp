@@ -44,9 +44,17 @@ std::map<std::string,unsigned char> map_reg{
 
 int main(int argc, char **argv)
 {
-
-  Parser parser;
+    std::ifstream iFile = std::ifstream();
+    if(argc == 2){
+        iFile.open(argv[1]);
+        if (!iFile) {
+            std::cerr << "Не могу открыть файл " << argv[1] << std::endl; 
+            return 1;
+        }
+    }
+  Parser parser{iFile ? static_cast<::std::istream &>(iFile) : static_cast<::std::istream &>(::std::cin)};
   parser.parse();
+  if(iFile)iFile.close();
   for(auto &i:map_label_list)
       for(auto j:i.second)
           g_programm[j]=map_label[i.first];
