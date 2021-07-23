@@ -11,16 +11,22 @@ std::map<std::string,unsigned char> map_command{
   { "nup", 0x00 }, 
   { "end", 0x01 }, 
   { "stop", 0x02 }, 
-  { "jmp", 0b00000100 }, 
+  { "jmp", 0b00001000 }, 
   { "mov", 0x10 }, 
   { "add", 0x20 }, 
-  { "sub", 0x30 }, 
-  { "je",  0x40 }, 
-  { "jne", 0x50 }, 
-  { "joe", 0x60 }, 
-  { "and", 0x70 }, 
-  { "xor", 0x80 }, 
-  { "or",  0x90 }, 
+  { "sub", 0x30 },
+  { "cmp", 0x40 }, 
+  { "je",  0x50 }, 
+  { "jne", 0x60 }, 
+  { "joe", 0x70 }, 
+  { "and", 0x80 }, 
+  { "xor", 0x90 }, 
+  { "or",  0xA0 },
+  { "rol", 0xB0 },
+  { "ror", 0xC0 },
+  { "jsr", 0xD0 }, 
+  { "pull", 0xE0 },
+  { "push", 0xF0 },
 };
 std::map<std::string,unsigned char> map_reg{ 
   { "R0", 0x00 }, 
@@ -29,7 +35,7 @@ std::map<std::string,unsigned char> map_reg{
   { "R3", 0x03 }, 
   { "R4", 0x04 }, 
   { "R5", 0x05 }, 
-  { "R6", 0x06 }, 
+  { "R6", 0x06 }, // SP SV | SD TV TD KV KC RC PS PC
   { "R7", 0x07 }, 
   { "R8", 0x08 }, 
   { "R9", 0x09 }, 
@@ -38,7 +44,17 @@ std::map<std::string,unsigned char> map_reg{
   { "Rc", 0x0A }, 
   { "Rd", 0x0A }, 
   { "Re", 0x0A }, 
-  { "Rf", 0x0A }, 
+  { "Rf", 0x0A },
+  { "SP", 0x06 }, // SP SV | SD TV TD KV KC RC PS PC
+  { "SV", 0x07 }, 
+  { "SD", 0x08 }, 
+  { "TV", 0x09 }, 
+  { "TD", 0x0A }, 
+  { "KV", 0x0A }, 
+  { "KC", 0x0A }, 
+  { "RC", 0x0A }, 
+  { "PS", 0x0A }, 
+  { "PC", 0x0A },
 };
 
 
@@ -70,7 +86,7 @@ int main(int argc, char **argv)
   printf("\n");
  
   printf("lines: %i\n",line);
-  printf("size: %i\n",g_programm.size());
+//  printf("size: %i\n",g_programm.size());
   g_programm.resize(256,0);
   std::ofstream file("out.bin",std::ios_base::binary);
   file.write((char *)g_programm.data(), g_programm.size());
