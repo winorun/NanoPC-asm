@@ -12,6 +12,11 @@ startrule:
   startrule commandString
 |
   commandString
+|
+  error NEW_LINE
+  {
+          std::cout << "Error in " << line << " line\n";
+  }
 ;
 
 reg:
