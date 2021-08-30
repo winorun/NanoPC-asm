@@ -9,7 +9,7 @@ std::map<std::string,unsigned char> map_label;
 std::map<std::string,std::list<unsigned char>> map_label_list;
 std::map<std::string,unsigned char> map_command{ 
   { "nup", 0x00 }, 
-  { "end", 0x01 }, 
+  { "halt", 0x01 }, 
   { "stop", 0x02 }, 
   { "jmp", 0b00001000 }, 
   { "mov", 0x10 }, 

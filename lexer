@@ -13,7 +13,7 @@ SP|SV|SD|TV|TD|KV|KC|RC|PS|PC       return Parser::REG;
 def                                 return Parser::DEF;
 DB|db                               return Parser::DB;                  
 ,                                   return Parser::COMMA;
-nop|end                             return Parser::COMMAND_1;
+nop|halt                            return Parser::COMMAND_1;
 jmp                                 return Parser::COMMAND_2;
 mov|add|sub|cmp|je|jne|joe          return Parser::COMMAND_3;
 and|xor|or|rol|ror|jsr|pull|push    return Parser::COMMAND_3;
